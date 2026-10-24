@@ -1,0 +1,69 @@
+train_path: data/splits/train_full.parquet
+val_path: data/splits/val.parquet
+test_path: data/splits/test.parquet
+tokenizer_path: artifacts/tokenizers/bpe_16384.json
+output_dir: artifacts/m1_deep_6e6d_d384_100k
+hf_data:
+  enabled: true
+  repo_id: kryalka/my-training-data
+  revision: 39ad90290460a12a721409298d6a7f1ca3612223
+  train_file: train_full.parquet
+  train_tokens_file: tokens/train_full_wrapper_bpe_16384.parquet
+  body_train_tokens_file: tokens/train_full_bpe_16384.parquet
+  val_file: val.parquet
+  test_file: test.parquet
+  restore_wrappers: true
+checkpoint_backup:
+  enabled: true
+  bucket_id: kryalka/nlp-code-generation-checkpoints
+  run_name: M1-deep-6e6d-d384-relu-full-100k-lr0.002-linear-s42-v1
+tokenization:
+  cache_dir: data/token_cache
+  backup_dir: null
+model:
+  vocab_size: 16384
+  encoder_layers: 6
+  decoder_layers: 6
+  d_model: 384
+  num_heads: 6
+  d_ff: 1536
+  dropout: 0.1
+  max_source_length: 128
+  max_target_length: 256
+  ffn: relu
+  position_encoding: absolute
+  body_only_targets: false
+training:
+  compile: true
+  seed: 42
+  epochs: 5
+  max_steps: 100000
+  val_every_steps: 100
+  batch_size: 64
+  gradient_accumulation_steps: 8
+  chunk_size: 8192
+  learning_rate: 0.002
+  lr_schedule: linear
+  warmup_steps: 2000
+  pass_at_end_only: false
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  pass_every_steps: 5000
+  checkpoint_every_steps: 1000
+  max_seconds: 64800
+  resume_from: null
+  deterministic: false
+  snapshot_steps:
+  - 70000
+  - 85000
+  - 100000
+generation:
+  max_new_tokens: 160
+  batch_size: 64
+comet:
+  enabled: true
+  project_name: nlp-code-generation
+  workspace: null
+  experiment_name: M1-deep-6e6d-d384-relu-full-100k
+  log_every_steps: 50
+  require_connection: true

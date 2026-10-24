@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+/tokenizers/evaluate_bpe.py
+
+/data/*
+!/data/.gitkeep
+
+/notebooks/*
+/tests/*
+/diagnostics/*
+/voting/*
+
+.DS_Store
+
+.DS_Store
